@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,15 +6,22 @@ public class Cell : MonoBehaviour
 {
     [SerializeField] private Image buttonBackgroundImage;
     [SerializeField] private TMP_Text buttonText;
+    [SerializeField] private Animation animation;
     
     private bool _isRevealed;
     private Color _revealedCellColor = new (0f, .138f, .267f, 1f);
-    
+
+    private void Start()
+    {
+        animation = GetComponent<Animation>();
+    }
+
     private void AnimateCell()
     {
         // TODO: replace code below with animation
-        buttonBackgroundImage.color = _revealedCellColor;
-        buttonText.gameObject.SetActive(true);
+        // buttonBackgroundImage.color = _revealedCellColor;
+        // buttonText.gameObject.SetActive(true);
+        animation.Play();
     }
     
     public bool IsRevealed()

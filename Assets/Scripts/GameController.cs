@@ -1,28 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
     [SerializeField] private BackgroundAnimator backgroundAnimator;
     [SerializeField] private Button button;
-    
+    [SerializeField] private GameObject orb;
+    [SerializeField] private Transform holder;
+    [SerializeField] private AnimationDataSO animationData;
+
     private void Commence()
     {
         Cell cell = GetRandomCell();
         if (cell != null)
         {
             cell.SetRevealed();
+            
+            GameObject newOrb = Instantiate(orb, holder);
+            Vector3 start = newOrb.transform.position;
+            Vector3 end = cell.transform.position;
 
-            //TODO: animate Orb at the appropriate time
+            // Create an elevated midpoint for the curve
+            Vector3 mid = (start + end) / 2 + Vector3.left * 1f;
 
-            cell.RevealCell(); //TODO: call this method at the appropriate time
+            // Define a 3-point path: start → mid → end
+            Vector3[] path = new Vector3[] { start, mid, end };
+
+            newOrb.transform.localScale = Vector3.zero;
+            newOrb.transform.gameObject.SetActive(true);
+            
+            Sequence sequence = DOTween.Sequence(); 
+            
+            sequence.Append(newOrb.transform.DOScale(Vector3.one, animationData.scaleDuration).SetEase(Ease.OutBack));
+            sequence.Append(newOrb.transform.DOPath(path, animationData.moveDuration, PathType.CatmullRom).SetEase(Ease.InOutSine));
+            sequence.AppendInterval(animationData.moveCompleteDelay).OnComplete(() =>
+            {
+                Destroy(newOrb);
+                cell.RevealCell();
+                CheckLastCell();
+            });
         }
-        else DisableButtonAndStartBackgroundAnimation();
+        else
+        {
+            DisableButtonAndStartBackgroundAnimation();
+        }
     }
 
+    private void CheckLastCell()
+    {
+        Cell isNextCellExists = GetRandomCell();
+        if (isNextCellExists == null)
+        {
+            DisableButtonAndStartBackgroundAnimation();
+        }
+    }
+    
     private void DisableButtonAndStartBackgroundAnimation()
     {
         backgroundAnimator.AnimateBackground();
