@@ -18,9 +18,6 @@ public class Cell : MonoBehaviour
 
     private void AnimateCell()
     {
-        // TODO: replace code below with animation
-        // buttonBackgroundImage.color = _revealedCellColor;
-        // buttonText.gameObject.SetActive(true);
         animation.Play();
     }
     

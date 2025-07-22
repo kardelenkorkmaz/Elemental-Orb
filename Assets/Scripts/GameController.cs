@@ -22,11 +22,9 @@ public class GameController : MonoBehaviour
             GameObject newOrb = Instantiate(orb, holder);
             Vector3 start = newOrb.transform.position;
             Vector3 end = cell.transform.position;
-
-            // Create an elevated midpoint for the curve
+            
             Vector3 mid = (start + end) / 2 + Vector3.left * 1f;
-
-            // Define a 3-point path: start → mid → end
+            
             Vector3[] path = new Vector3[] { start, mid, end };
 
             newOrb.transform.localScale = Vector3.zero;
@@ -36,6 +34,7 @@ public class GameController : MonoBehaviour
             
             sequence.Append(newOrb.transform.DOScale(Vector3.one, animationData.scaleDuration).SetEase(Ease.OutBack));
             sequence.Append(newOrb.transform.DOPath(path, animationData.moveDuration, PathType.CatmullRom).SetEase(Ease.InOutSine));
+            sequence.Append(newOrb.transform.DOScale(new Vector3(1f, animationData.hitScaleAmount, animationData.hitScaleAmount), animationData.hitScaleDuration).SetEase(Ease.OutBack));
             sequence.AppendInterval(animationData.moveCompleteDelay).OnComplete(() =>
             {
                 Destroy(newOrb);
