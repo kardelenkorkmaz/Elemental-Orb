@@ -16,4 +16,4 @@ MonoBehaviour:
   moveDuration: 0.5
   moveCompleteDelay: 0
   hitScaleAmount: 0.85
-  hitScaleDuration: 0.1
+  hitScaleDuration: 0.075
